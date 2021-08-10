@@ -4,32 +4,17 @@
     margin: 0;
 }
 
-.app {
-    margin: 0 auto;
-    height: 100vh;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.app-wrapper {
-    background-color: #ccc;
-    display: flex;
-    height: auto;
-    padding: 1rem;
-}
-
 .container {
     display: flex;
-    flex-direction: column;
 }
 
-.picked-seats {
-    padding-left: 2rem;
+.rezervacia {
+    padding-left: 1rem;
 }
 
-.cancel {
+.rezervacia p span {
     color: blue;
+    margin-left: 0.25rem;
+    font-size: 0.8rem;
     cursor: pointer;
 }

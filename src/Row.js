@@ -1,38 +1,35 @@
-import React from "react";
-import "./Row.css";
+import { useState } from "react";
 
-const Row = (props) => {
+const Row = ({ rowIndex, handlePickedSeats, uidOfCheckboxToDelete }) => {
   const seatsInRow = Array.from({ length: 20 });
 
-  const handleClick = (event, key) => {
-    if (event.target.checked === true) {
-      const row = event.target.parentElement.getAttribute("cislo-rad");
-      const seat = parseInt(event.target.id) + 1;
-      props.selectSeat(seat, row, key);
-    } else {
-      props.removeSeat(event, key);
-      event.target.checked = false;
-    }
+  const handleSeatPick = (e, uid) => {
+    handlePickedSeats(e, uid);
   };
 
   return (
-    <React.Fragment>
-      <div cislo-rad={props.rowNumber} className="row" key={props.rowNumber}>
-        <p>Rad {props.rowNumber}</p>
-
-        {seatsInRow.map((row, index) => {
-          const uniqueId = `${parseInt(index) + 1}x${props.rowNumber}`;
-          return (
-            <input
-              type="checkbox"
-              id={index}
-              onClick={(event) => handleClick(event, uniqueId)}
-              key={uniqueId}
-            />
-          );
-        })}
-      </div>
-    </React.Fragment>
+    <div className="row">
+      {seatsInRow.map((seat, index) => {
+        const uid = `${rowIndex + 1}x${index + 1}`;
+        let checked;
+        if (uid === uidOfCheckboxToDelete) {
+          checked = false;
+        }
+        return (
+          <input
+            name={uid}
+            type="checkbox"
+            key={uid}
+            row={rowIndex + 1}
+            seat={index + 1}
+            onClick={(e) => {
+              handleSeatPick(e, uid);
+            }}
+            checked={checked}
+          />
+        );
+      })}
+    </div>
   );
 };
 

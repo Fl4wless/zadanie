@@ -1,59 +1,57 @@
 import { useState } from "react";
 import "./App.css";
-import Row from "./Row";
+import Seats from "./Seats";
 
 function App() {
-  const [selectedSeats, setSelectedSeats] = useState([]);
+  const [seatsNumber, setSeatsNumber] = useState(0);
+  const [pickedSeats, setPickedSeats] = useState([]);
+  const [uidOfCheckboxToDelete, setUidOfCheckboxToDelete] = useState();
 
-  const handleSelectSeat = (seat, row, key) => {
-    setSelectedSeats((prev) => [...prev, { key: key, row: row, seat: seat }]);
+  const handlePickedSeats = (e, uid) => {
+    if (e.target.checked) {
+      const row = e.target.getAttribute("row");
+      const seat = e.target.getAttribute("seat");
+      setPickedSeats((prev) => [
+        ...prev,
+        { key: uid, row: row, seat: parseInt(seat) + 1 },
+      ]);
+      setSeatsNumber((prev) => prev + 1);
+    } else {
+      setPickedSeats(pickedSeats.filter((seat) => seat.key !== uid));
+      setSeatsNumber((prev) => prev - 1);
+    }
   };
 
-  const handleRemoveSeat = (key, event) => {
-    setSelectedSeats(selectedSeats.filter((item) => item.key !== key));
-    console.log(selectedSeats);
-    console.log(event);
+  const handleDeleteReservation = (e, row, seat) => {
+    const id = `${row}x${seat - 1}`;
+    setUidOfCheckboxToDelete(id);
+    setPickedSeats(pickedSeats.filter((seat) => seat.key !== id));
+    setSeatsNumber((prev) => prev - 1);
   };
-
-  const handleIsChecked = (e) => {
-    e.target.checked = false;
-  };
-
-  const rows = Array.from({ length: 10 });
 
   return (
     <div className="app">
-      <div className="app-wrapper">
-        <div className="container">
-          {rows.map((row, index) => (
-            <Row
-              rowNumber={index + 1}
-              selectSeat={handleSelectSeat}
-              removeSeat={handleRemoveSeat}
-              removeCheck={handleIsChecked}
-            />
-          ))}
-        </div>
-        <div className="picked-seats">
-          <p>Vybrané miesta</p>
-          <div className="miesta">
-            {selectedSeats &&
-              selectedSeats.map((seat) => (
-                <p key={`${seat.seat}x${seat.row}`}>
-                  {`Rad ${seat.row}, Sedadlo ${seat.seat}`}
-                  <span
-                    className="cancel"
-                    onClick={(e) =>
-                      handleRemoveSeat(`${seat.seat}x${seat.row}`)
-                    }
-                  >
-                    (Zrušiť)
+      <div className="container">
+        <Seats
+          handlePickedSeats={handlePickedSeats}
+          uidOfCheckboxToDelete={uidOfCheckboxToDelete}
+        />
+        <div className="rezervacia">
+          <h3>Vybrané miesta</h3>
+          {pickedSeats &&
+            pickedSeats.map(({ row, seat }) => {
+              return (
+                <p key={Math.random() * 100}>
+                  {`Rad ${row}, Miesto ${seat - 1}`}
+                  <span onClick={(e) => handleDeleteReservation(e, row, seat)}>
+                    delete
                   </span>
                 </p>
-              ))}
-          </div>
+              );
+            })}
         </div>
       </div>
+      <p>Počet vybratých miest: {seatsNumber}</p>
     </div>
   );
 }
