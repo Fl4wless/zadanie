@@ -1,0 +1,16 @@
+.row {
+    display: flex;
+    padding: 0.2rem;
+}
+
+input {
+    margin-right: 0.5rem;
+}
+
+.sigle-seat {
+    padding-left: 2rem;
+}
+
+.row>p {
+    width: 4rem;
+}
